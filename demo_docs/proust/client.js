@@ -1,4 +1,4 @@
-// Клиент библиотечного API: тома и поиск по темам.
+// Client of the library API: volumes and theme search.
 
 const VOLUME_ENDPOINT = "/api/proust/volumes";
 const MADELEINE_QUERY = "?trigger=madeleine";
@@ -8,11 +8,11 @@ export async function fetchVolumes(baseUrl) {
   if (!resp.ok) {
     throw new Error(`volumes request failed: ${resp.status}`);
   }
-  return resp.json(); // семь томов с годами публикации
+  return resp.json(); // seven volumes with publication years
 }
 
 export async function findMadeleineScene(baseUrl) {
-  // сцена с мадленкой находится в первом томе
+  // the madeleine scene is in the first volume
   const resp = await fetch(`${baseUrl}${VOLUME_ENDPOINT}${MADELEINE_QUERY}`);
   return (await resp.json()).find((v) => v.id === MADELEINE_VOLUME_ID);
 }

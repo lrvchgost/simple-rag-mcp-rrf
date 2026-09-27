@@ -1,28 +1,30 @@
-# В поисках утраченного времени: общий обзор
+# In Search of Lost Time: general overview
 
-«À la recherche du temps perdu» — цикл из семи романов Марселя Пруста, выходивший
-в 1913–1927 годах. Рассказчик (не названный по имени Марсель) вспоминает жизнь —
-свою и окружающих — и постепенно приходит к замыслу книги, которую читатель
-только что закончил.
+«À la recherche du temps perdu» — a cycle of seven novels by Marcel Proust,
+published in 1913–1927. The narrator (named Marcel only in passing) recalls his
+life and the lives of those around him and gradually arrives at the plan of the
+very book the reader has just finished.
 
-## Семь томов
+## Seven volumes
 
-1. «По направлению к Свану» (1913) — Комбре, мадленка, история любви Свана.
-2. «В тени девушек-цветов» (1919) — Балбек, море, юные девушки, Гонкуровская премия.
-3. «У Германтов» (1920–1921) — аристократический свет, салон герцогини де Германт.
-4. «Содом и Гоморра» (1921–1922) — гомосексуальность Шарлюса и Альбертины, женитьба рассказчика.
-5. «Пленница» (1923) — Альбертина в парижской квартире, ревность и слежка.
-6. «Альбертина пропавшая» (1925) — побег и смерть Альбертины, скорбь по ней.
-7. «Обретённое время» (1927) — бал у Германтов, «запрокинутое время», решение писать книгу.
+1. «Swann's Way» (1913) — Combray, the madeleine, the story of Swann's love.
+2. «Within a Budding Grove» (1919) — Balbec, the sea, young girls, the Goncourt prize.
+3. «The Guermantes Way» (1920–1921) — aristocratic society, the salon of the Duchess de Guermantes.
+4. «Sodom and Gomorrah» (1921–1922) — Charlus and Albertine, the narrator's marriage.
+5. «The Captive» (1923) — Albertine in the Paris apartment, jealousy and surveillance.
+6. «The Fugitive» (1925) — Albertine's escape and death, the narrator's grief.
+7. «Time Regained» (1927) — the Guermantes ball, «time regained», the decision to write the book.
 
-## Структура рассказа
+## Structure of the narrative
 
-Ни событий-катастроф, ни детективной интриги: сюжет — это движение памяти.
-Повторяющиеся «воспоминательные» сцены (мадленка, неровные плиты в Венеции,
-ложка о тарелку) возвращают целые эпохи и позволяют рассказчику «остановить время».
+No catastrophes, no detective plot: the story is the movement of memory itself.
+Recurring «memory» scenes (the madeleine, uneven paving stones in Venice, the
+sound of a spoon) bring whole eras back and let the narrator «stop time».
 
-## Место действия
+## Places
 
-Комбре — вымышленный провинциальный городок детства (два «пути»: Свана и Германтов).
-Балбек — приморский курорт. Париж — светская столица цикла. Венеция — последний
-этап странствий перед «Обретённым временем».
+Combray — the childhood village; Balbec — the seaside resort; Paris — the salons
+of the Faubourg Saint-Germain and the Verdurins; Venice — the last journey.
+This corpus also contains excerpt chapters of volumes 1–3 in C. K. Scott
+Moncrieff's classic translation (public domain), used to test retrieval on
+long-form literary text.
