@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import logging
 import time
+from collections.abc import Callable
 from pathlib import Path
 
 import yaml
@@ -26,6 +27,9 @@ _CODE_LANGUAGES: dict[str, Language] = {
 
 # Батч эмбеддингов за один запрос к EmbeddingService
 _EMBED_BATCH = 64
+
+# Колбэк прогресса: (готово, всего, сообщение). Не обязан ничего делать.
+ProgressCallback = Callable[[int, int, str], None]
 
 
 class DocumentIndexer:
@@ -49,7 +53,12 @@ class DocumentIndexer:
         self._chunk_size = chunk_size
         self._chunk_overlap = chunk_overlap
 
-    def index_folder(self, folder_path: str, glob_pattern: str = "**/*") -> IndexingResult:
+    def index_folder(
+        self,
+        folder_path: str,
+        glob_pattern: str = "**/*",
+        on_progress: ProgressCallback | None = None,
+    ) -> IndexingResult:
         started = time.monotonic()
         folder = Path(folder_path).expanduser().resolve()
         if not folder.is_dir():
@@ -76,8 +85,12 @@ class DocumentIndexer:
 
         sources = [str(p) for p in files]
         self._vector.delete_by_sources(sources)
-        self._add_chunks(chunks)
+        self._report(
+            on_progress, 0, len(chunks), f"чанков: {len(chunks)} — считаю эмбеддинги"
+        )
+        self._add_chunks(chunks, on_progress)
         self._sparse.build(self._vector.all_chunks())
+        self._report(on_progress, len(chunks), len(chunks), "готово")
 
         return IndexingResult(
             files_found=len(files),
@@ -91,11 +104,29 @@ class DocumentIndexer:
     def _extensions(self) -> frozenset[str]:
         return frozenset({".md", ".txt", ".py", ".js", ".ts", ".json", ".yaml", ".yml"})
 
-    def _add_chunks(self, chunks: list[Chunk]) -> None:
-        for start in range(0, len(chunks), _EMBED_BATCH):
+    def _add_chunks(self, chunks: list[Chunk], on_progress: ProgressCallback | None) -> None:
+        total = len(chunks)
+        for start in range(0, total, _EMBED_BATCH):
             batch = chunks[start : start + _EMBED_BATCH]
             vectors = self._embeddings.embed([c.text for c in batch])
             self._vector.add(batch, vectors)
+            done = min(start + _EMBED_BATCH, total)
+            logger.info("эмбеддинги %d/%d", done, total)
+            self._report(
+                on_progress, done, total, f"эмбеддинги {done}/{total} чанков"
+            )
+
+    @staticmethod
+    def _report(
+        on_progress: ProgressCallback | None, done: int, total: int, message: str
+    ) -> None:
+        """Прогресс не должен ломать индексацию ни при каких ошибках колбэка."""
+        if on_progress is None:
+            return
+        try:
+            on_progress(done, total, message)
+        except Exception:  # noqa: BLE001
+            logger.exception("Ошибка в колбэке прогресса индексации")
 
     def _split_file(self, path: Path) -> list[Chunk]:
         content = path.read_text(encoding="utf-8", errors="replace")

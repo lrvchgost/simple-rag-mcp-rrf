@@ -6,13 +6,14 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import logging
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from functools import lru_cache
 
-from fastmcp import FastMCP
+from fastmcp import Context, FastMCP
 
 from src.config import Settings, load_settings
 from src.domain.errors import OllamaUnavailableError
@@ -108,7 +109,9 @@ def _log_call(tool: str, **args) -> None:
 
 
 @mcp.tool()
-def index_folder(folder_path: str, glob_pattern: str = "**/*") -> str:
+async def index_folder(
+    folder_path: str, glob_pattern: str = "**/*", ctx: Context | None = None
+) -> str:
     """Индексирует локальную папку с документами и строит поисковую базу знаний.
 
     Сканирует folder_path по glob-паттерну, читает файлы (.md, .txt, .py, .js,
@@ -133,10 +136,25 @@ def index_folder(folder_path: str, glob_pattern: str = "**/*") -> str:
     """
     _log_call("index_folder", folder_path=folder_path, glob_pattern=glob_pattern)
     try:
-        ctx = get_context()
-        result = ctx.indexer.index_folder(folder_path, glob_pattern)
-        ctx.stats.files_indexed = result.files_indexed
-        ctx.stats.last_indexed_at = datetime.now(UTC).isoformat()
+        app = get_context()
+        loop = asyncio.get_running_loop()
+
+        def on_progress(done: int, total: int, message: str) -> None:
+            """Мост из рабочего потока в MCP progress-нотификации.
+
+            Без progressToken от клиента report_progress молча пропускает отправку.
+            """
+            if ctx is None:
+                return
+            asyncio.run_coroutine_threadsafe(
+                ctx.report_progress(done, total, message), loop
+            )
+
+        result = await asyncio.to_thread(
+            app.indexer.index_folder, folder_path, glob_pattern, on_progress
+        )
+        app.stats.files_indexed = result.files_indexed
+        app.stats.last_indexed_at = datetime.now(UTC).isoformat()
         return _json(
             {
                 "status": "ok",
@@ -146,7 +164,7 @@ def index_folder(folder_path: str, glob_pattern: str = "**/*") -> str:
                 "skipped_files": result.skipped_files,
                 "chunks_created": result.chunks_created,
                 "duration_seconds": result.duration_seconds,
-                "total_chunks_in_kb": ctx.vector.count(),
+                "total_chunks_in_kb": app.vector.count(),
             }
         )
     except (NotADirectoryError, ValueError) as exc:
