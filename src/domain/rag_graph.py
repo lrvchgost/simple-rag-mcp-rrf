@@ -26,9 +26,11 @@ _REWRITE_SYSTEM = (
 )
 
 _GRADE_SYSTEM = (
-    "You are a strict relevance grader. For each numbered chunk decide whether it "
-    "contains information needed to answer the question. Do not guess beyond the "
-    "chunk text. Answer ONLY with JSON of shape "
+    "You grade retrieval chunks for answering the question. Mark relevant=true "
+    "if the chunk contains ANY information useful for the answer: facts, names, "
+    "definitions, context — even partial. Mark false ONLY if the chunk is clearly "
+    "about a different topic. When unsure, answer true. "
+    "Answer ONLY with JSON of shape "
     '{"results":[{"index":1,"relevant":true},{"index":2,"relevant":false}]} '
     "with an entry for every chunk."
 )
