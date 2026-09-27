@@ -1,32 +1,33 @@
-"""Программный индекс цикла: тома, темы, триггеры непроизвольной памяти."""
+"""Programmatic index of the cycle: volumes, themes, involuntary-memory triggers."""
 
 VOLUME_COUNT = 7
-MADELEINE_VOLUME = 1          # сцена с мадленкой — первый том, «Комбре»
+MADELEINE_VOLUME = 1          # the madeleine scene is in the first volume, "Combray"
 FINAL_BALL_VOLUME = VOLUME_COUNT
 
 
 def volume_titles() -> dict[int, str]:
-    """Русские названия всех семи томов по порядку."""
+    """English titles (C. K. Scott Moncrieff) of all seven volumes in order."""
     return {
-        1: "По направлению к Свану",
-        2: "В тени девушек-цветов",
-        3: "У Германтов",
-        4: "Содом и Гоморра",
-        5: "Пленница",
-        6: "Альбертина пропавшая",
-        7: "Обретённое время",
+        1: "Swann's Way",
+        2: "Within a Budding Grove",
+        3: "The Guermantes Way",
+        4: "Sodom and Gomorrah",
+        5: "The Captive",
+        6: "The Fugitive",
+        7: "Time Regained",
     }
 
 
 def themes() -> list[str]:
-    """Пять больших тем цикла, используемые в учебном курсе."""
-    return ["память", "время", "ревность", "снобизм", "искусство"]
+    """The five major themes of the cycle used in the training course."""
+    return ["memory", "time", "jealousy", "snobism", "art"]
 
 
 def memory_triggers() -> dict[str, str]:
-    """Триггеры непроизвольной памяти: ощущение -> восстановленная эпоха."""
+    """Sensation -> the hour of life it brings back."""
     return {
-        "madeleine": "Комбре, воскресенья у тети Леонии",
-        "spoon": "звонок трамвая и завтраки в Балбеке",
-        "paving_stones": "Венеция и баптистерий святого Марка",
+        "madeleine": "Combray, Sundays at Aunt Leonie's",
+        "spoon": "the sound on the plate, the railway hammering",
+        "paving-stones": "the baptistery of St Mark's, Venice",
+        "steeple": "the two steeples of Martinville seen from the carriage",
     }

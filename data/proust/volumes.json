@@ -2,15 +2,20 @@
   "cycle": "À la recherche du temps perdu",
   "author": "Marcel Proust",
   "volumes": [
-    {"id": 1, "title": "По направлению к Свану", "french": "Du côté de chez Swann", "year": 1913},
-    {"id": 2, "title": "В тени девушек-цветов", "french": "À l'ombre des jeunes filles en fleurs", "year": 1919},
-    {"id": 3, "title": "У Германтов", "french": "Le Côté de Guermantes", "year": 1920},
-    {"id": 4, "title": "Содом и Гоморра", "french": "Sodome et Gomorrhe", "year": 1921},
-    {"id": 5, "title": "Пленница", "french": "La Prisonnière", "year": 1923},
-    {"id": 6, "title": "Альбертина пропавшая", "french": "Albertine disparue", "year": 1925},
-    {"id": 7, "title": "Обретённое время", "french": "Le Temps retrouvé", "year": 1927}
+    {"id": 1, "title": "Swann's Way", "french": "Du côté de chez Swann", "year": 1913},
+    {"id": 2, "title": "Within a Budding Grove", "french": "À l'ombre des jeunes filles en fleurs", "year": 1919},
+    {"id": 3, "title": "The Guermantes Way", "french": "Le Côté de Guermantes", "year": 1920},
+    {"id": 4, "title": "Sodom and Gomorrah", "french": "Sodome et Gomorrhe", "year": 1921},
+    {"id": 5, "title": "The Captive", "french": "La Prisonnière", "year": 1923},
+    {"id": 6, "title": "The Fugitive", "french": "Albertine disparue", "year": 1925},
+    {"id": 7, "title": "Time Regained", "french": "Le Temps retrouvé", "year": 1927}
   ],
   "awards": [
-    {"year": 1919, "name": "Гонкуровская премия", "volume": 2}
-  ]
+    {"year": 1919, "name": "Prix Goncourt", "volume": 2}
+  ],
+  "corpus": {
+    "translation": "C. K. Scott Moncrieff",
+    "source": "Project Gutenberg",
+    "volumes_included": [1, 2, 3]
+  }
 }

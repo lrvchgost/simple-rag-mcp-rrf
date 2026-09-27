@@ -1,21 +1,21 @@
-# Конфиг учебной «библиотеки Комбре» (тестовые данные для RAG)
+# Config of the training «Combray Library» (test data for RAG)
 
 library:
   name: Combray-Library
-  cycle: "В поисках утраченного времени"
+  cycle: "In Search of Lost Time"
   VOLUME_COUNT: 7
   publication_window: [1913, 1927]
 
 memory:
-  trigger: madeleine          # сцена-триггер для демонстрации непроизвольной памяти
-  steeping_seconds: 30        # сколько мадленка лежит в чае, прежде чем её съесть
-  voluntary: false            # произвольная память не возвращает час целиком
+  trigger: madeleine          # trigger scene for involuntary memory demo
+  steeping_seconds: 30        # how long the madeleine steeps in the tea
+  voluntary: false            # voluntary memory does not return the whole hour
 
 reading:
-  order: linear               # читать тома по порядку: 1 -> 7
-  madeleine_volume: 1         # том, в котором случается сцена с мадленкой
-  ball_volume: 7              # «бал шляп» в финале
+  order: linear               # read the volumes in order: 1 -> 7
+  madeleine_volume: 1         # the volume with the madeleine scene
+  ball_volume: 7              # the «bal de têtes» in the finale
 
 courses:
-  themes: [память, время, ревность, снобизм, искусство]
-  required_characters: [Шарль Сван, Одетта, Шарлюс, Альбертина, Вентей]
+  themes: [memory, time, jealousy, snobism, art]
+  required_characters: [Charles Swann, Odette, Charlus, Albertine, Vinteuil]

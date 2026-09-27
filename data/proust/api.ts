@@ -1,23 +1,23 @@
-// Типы библиотечного API цикла «В поисках утраченного времени».
+// Types of the library API for «In Search of Lost Time».
 
 export interface Volume {
-  id: number;           // 1..7 в порядке публикации
-  title: string;        // русское название тома
-  year: number;         // год первой публикации
-  narrator_age: number; // примерный возраст рассказчика к концу тома
+  id: number;           // 1..7 in publication order
+  title: string;        // English title (Moncrieff translation)
+  french: string;       // original French title
+  year: number;         // year of first publication
 }
 
 export interface Character {
-  name: string;         // «Шарль Сван», «Альбертина Симоне» и т.д.
+  name: string;         // "Charles Swann", "Albertine Simonet", etc.
   circle: "swann" | "guermantes" | "verdurins" | "family";
-  arc: string;          // краткое описание пути персонажа
+  arc: string;          // brief description of the character's path
 }
 
 export interface MemoryTrigger {
-  sense: "taste" | "sound" | "touch"; // мадленка — taste, ложка — sound
+  sense: "taste" | "sound" | "touch"; // madeleine — taste, spoon — sound
   object: string;
-  recalls: string;      // какой час жизни возвращает
+  recalls: string;      // which hour of life it brings back
 }
 
-// Хронология публикации: 1913 — «Сван», 1927 — посмертный «Обретённый».
+// Publication timeline: 1913 — "Swann's Way", 1927 — the posthumous "Time Regained".
 export const PUBLICATION_WINDOW: [number, number] = [1913, 1927];

@@ -14,8 +14,8 @@ project/
 ├── src/                     # код сервера (server.py, config.py, domain/, infrastructure/)
 ├── tests/                   # pytest без сети и без LLM (fake-реализации интерфейсов)
 ├── demo_docs/               # технический демо-корпус (7 файлов, 6 форматов)
-├── data/proust/             # художественный корпус ~500 КБ (тексты + рукописные обзоры)
-├── scripts/generate_corpus.py  # генератор глав data/proust/texts (фикс. seed)
+├── data/proust/             # художественный корпус ~550 КБ (главы + рукописные обзоры)
+├── scripts/download_corpus.py  # загрузчик глав data/proust/texts (Project Gutenberg)
 ├── docker-compose.yml       # ollama + автозагрузка моделей + сервер (одна команда)
 ├── Dockerfile
 ├── opencode.json            # готовый конфиг MCP для opencode (remote-вариант)
@@ -150,18 +150,18 @@ VS Code / другие клиенты, поддерживающие streamable H
 | Корпус | Содержимое | Объём |
 |---|---|---|
 | `demo_docs/` | технические документы (архитектура AuthService, конфиги, код) — 7 файлов, все 6 форматов из ТЗ | ~7 КБ |
-| `data/proust/` | корпус по «В поисках утраченного времени» Пруста: рукописные обзоры + 28 синтетических глав по томам романа (весь текст на русском) | ~500 КБ, ~350 чанков |
+| `data/proust/` | корпус по «В поисках утраченного времени» Пруста: рукописные обзоры + 13 глав-выдержек томов 1–3 в переводе C. K. Scott Moncrieff (весь текст на английском, public domain) | ~550 КБ, ~820 чанков |
 
-Главы `data/proust/texts/` сгенерированы скриптом (seed фиксирован, воспроизводимо):
+Главы `data/proust/texts/` скачаны с Project Gutenberg и нарезаны скриптом (воспроизводимо):
 
 ```bash
-.venv/bin/python scripts/generate_corpus.py
+.venv/bin/python scripts/download_corpus.py
 ```
 
 Сценарий проверки:
 
 1. `index_folder` с `folder_path = ./demo_docs` (или `/data/docs` в контейнере) — технический корпус.
-2. `index_folder` с `folder_path = ./data/proust` — большой художественный корпус (проверка латентности и объёма).
+2. `index_folder` с `folder_path = ./data/proust` — большой англоязычный художественный корпус (проверка латентности и объёма).
 3. `index_status` — убедиться, что чанки созданы.
 4. `find_relevant_docs` с `query = "TOKEN_EXPIRY_HOURS"` — точечный BM25-поиск по идентификатору.
 5. `find_relevant_docs` с `query = "VOLUME_COUNT"` или `query = "Мезеглиз"` — поиск по коду/тексту.
