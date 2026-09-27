@@ -1,0 +1,177 @@
+{
+  "rows": [
+    {
+      "id": "tech-token-expiry-def",
+      "category": "tech",
+      "answer": "TOKEN_EXPIRY_HOURS is defined with its default value in the file auth_settings.yaml.",
+      "loops": 0,
+      "fact_coverage": 0.43,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "TOKEN_EXPIRY_HOURS: 24"
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "tech-key-rotation",
+      "category": "tech",
+      "answer": "The RS256 private key is rotated every 90 days.",
+      "loops": 0,
+      "fact_coverage": 0.46,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "[\"The RS256 private key is rotated every 90 days.\"]"
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "tech-token-service",
+      "category": "tech",
+      "answer": "TokenService reads TOKEN_EXPIRY_HOURS from auth_settings.yaml.",
+      "loops": 2,
+      "fact_coverage": 1.0,
+      "fact_ok": true,
+      "faithful": false,
+      "unsupported": [
+        "TokenService reads TOKEN_EXPIRY_HOURS from auth_settings.yaml"
+      ],
+      "verdict": "OK"
+    },
+    {
+      "id": "tech-volume-count",
+      "category": "tech",
+      "answer": "VOLUME_COUNT is set to 7.",
+      "loops": 0,
+      "fact_coverage": 1.0,
+      "fact_ok": true,
+      "faithful": true,
+      "unsupported": [
+        "\"VOLUME_COUNT = 7\"",
+        "\"VOLUME_COUNT is set to 7.\""
+      ],
+      "verdict": "OK"
+    },
+    {
+      "id": "tech-verdurins-themes",
+      "category": "tech",
+      "answer": "The Verdurins are infatuated with Charles Swann, which is mentioned in the context. However, the context does not provide specific information about their role in the themes overview.",
+      "loops": 0,
+      "fact_coverage": 0.17,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "The Verdurins are infatuated with Charles Swann, which is mentioned in the context. However, the context does not provide specific information about their role in the themes overview."
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "proust-cottard-meet",
+      "category": "proust",
+      "answer": "The context does not provide any information on where Professor Cottard should be met.",
+      "loops": 2,
+      "fact_coverage": 0.0,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "The context does not provide any information on where Professor Cottard should be met."
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "proust-cottard-summer",
+      "category": "proust",
+      "answer": "The context provided does not contain any information about Professor Cottard spending his summers.",
+      "loops": 2,
+      "fact_coverage": 0.2,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "The context provided does not contain any information about Professor Cottard spending his summers."
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "proust-vinteuil-neighbours",
+      "category": "proust",
+      "answer": "Aunt Flora said that M. Vinteuil has nice neighbours.",
+      "loops": 0,
+      "fact_coverage": 0.55,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "Aunt Flora said that M. Vinteuil has nice neighbors."
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "proust-odette",
+      "category": "proust",
+      "answer": "Odette de Crecy is the wife of the Princesse des Laumes, who is expected to become the Duchesse de Guermantes upon her father-in-law's death.",
+      "loops": 0,
+      "fact_coverage": 0.5,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "[Odette de Crecy] a beauty of the demimonde"
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "proust-swann-motive",
+      "category": "proust",
+      "answer": "Swann's motives for marrying Odette are not explicitly detailed in the provided context. The context suggests that Swann's decision to marry Odette was influenced by his desire to please the Duchesse de Guermantes, but it does not provide specific information about his personal motivations.",
+      "loops": 0,
+      "fact_coverage": 0.38,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "Swann's motives for marrying Odette are not explicitly detailed in the provided context."
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "proust-gilberte",
+      "category": "proust",
+      "answer": "Gilberte is the daughter of Charles Swann and Odette de Crécy.",
+      "loops": 0,
+      "fact_coverage": 1.0,
+      "fact_ok": true,
+      "faithful": false,
+      "unsupported": [
+        "Gilberte is the daughter of Charles Swann and Odette de Crécy."
+      ],
+      "verdict": "OK"
+    },
+    {
+      "id": "proust-vinteuil-sonata",
+      "category": "proust",
+      "answer": "Vinteuil's sonata contains the little phrase.",
+      "loops": 0,
+      "fact_coverage": 1.0,
+      "fact_ok": true,
+      "faithful": false,
+      "unsupported": [
+        "Vinteuil's sonata contains the little phrase"
+      ],
+      "verdict": "OK"
+    },
+    {
+      "id": "refusal-swallow",
+      "category": "refusal",
+      "answer": "The context provided does not contain any information about the airspeed of an unladen swallow.",
+      "loops": 2,
+      "refusal_ok": true,
+      "verdict": "refusal OK"
+    },
+    {
+      "id": "refusal-kubernetes",
+      "category": "refusal",
+      "answer": "The provided context does not contain any information about deploying a service to Kubernetes. It only includes details about a service named 'auth-service' and a client-side JavaScript file for a service called 'AuthService'.",
+      "loops": 1,
+      "refusal_ok": true,
+      "verdict": "refusal OK"
+    }
+  ]
+}

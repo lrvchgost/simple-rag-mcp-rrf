@@ -98,3 +98,59 @@ def test_parse_verdicts_tolerates_fences_and_string_bools():
 def test_parse_verdicts_raises_without_json():
     with pytest.raises(ValueError):
         CorrectiveRAGGraph._parse_verdicts("вроде релевантно, да")
+
+
+def test_refusal_message_is_bilingual():
+    stuck = make_chunk("x", "совсем не то", "docs/other.md")
+    graph, llm = build_graph(
+        vector_canned=[[ScoredChunk(stuck, 0.1)]],
+        llm_responses=[
+            "запрос",
+            grade_json([False]),
+            "расширение",
+            grade_json([False]),
+        ],
+        max_loops=1,
+    )
+    result = graph.run("question outside the corpus")
+
+    assert "No relevant fragments found" in result.answer
+    assert "Не найдено релевантных фрагментов" in result.answer
+    # rewrite, grade, broaden, grade — generate не вызывается без чанков
+    assert len(llm.prompts) == 4
+
+
+def test_lexical_gate_refuses_offtopic_english_question():
+    noise = make_chunk("n", "пруст и время в Комбре", "docs/proust.md")
+    graph, llm = build_graph(
+        vector_canned=[
+            [ScoredChunk(noise, 0.1)],
+            [ScoredChunk(noise, 0.1)],
+        ],
+        llm_responses=[
+            "airspeed unladen swallow",
+            grade_json([True]),
+            "unladen swallow",
+            grade_json([True]),
+        ],
+        max_loops=1,
+    )
+    result = graph.run("What is the airspeed of an unladen swallow?")
+
+    assert "No relevant fragments found" in result.answer
+    # rewrite, grade, broaden, grade — generate не вызвал LLM
+    assert len(llm.prompts) == 4
+
+
+def test_lexical_gate_passes_on_topic_english_question():
+    chunk = make_chunk("a", "Cottard is a physician of the Verdurin circle", "docs/p.md")
+    graph, llm = build_graph(
+        vector_canned=[[ScoredChunk(chunk, 0.1)]],
+        llm_responses=["Cottard Verdurin", grade_json([True]), "He is a physician."],
+        min_relevant=1,
+    )
+    result = graph.run("Who is Professor Cottard?")
+
+    assert result.answer == "He is a physician."
+    assert result.sources == ["docs/p.md"]
+    assert len(llm.prompts) == 3  # rewrite, grade, generate — без broaden

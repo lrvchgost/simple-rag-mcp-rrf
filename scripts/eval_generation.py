@@ -54,7 +54,9 @@ def refusal_detected(answer: str) -> bool:
             or "no relevant" in a
             or "no information" in a
             or "insufficient" in a
-            or "не содерж" in a)
+            or "не содерж" in a
+            or "does not contain" in a
+            or "does not mention" in a)
 
 
 JUDGE_SYSTEM = (

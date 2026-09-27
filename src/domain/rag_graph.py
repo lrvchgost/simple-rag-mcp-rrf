@@ -29,11 +29,31 @@ _GRADE_SYSTEM = (
     "You grade retrieval chunks for answering the question. Mark relevant=true "
     "if the chunk contains ANY information useful for the answer: facts, names, "
     "definitions, context — even partial. Mark false ONLY if the chunk is clearly "
-    "about a different topic. When unsure, answer true. "
+    "about a different topic. When unsure about a borderline on-topic chunk, "
+    "answer true. If NONE of the chunks is related to the question at all "
+    "(the question is outside the indexed material), mark ALL chunks false. "
     "Answer ONLY with JSON of shape "
     '{"results":[{"index":1,"relevant":true},{"index":2,"relevant":false}]} '
     "with an entry for every chunk."
 )
+
+_TOKEN_RE = re.compile(r"[a-z0-9]+")
+# Маркеры того, что запрос латиницей (документированный сценарий: корпус
+# английский, английские вопросы дают самые надёжные ответы).
+_LATIN_RE = re.compile(r"^[a-z0-9\s\-']+$")
+# Служебные слова, не участвующие в лексической проверке релевантности.
+_STOPWORDS = {
+    "the", "and", "for", "with", "that", "this", "from", "what", "who",
+    "where", "when", "how", "why", "does", "did", "is", "are", "was", "were",
+    "his", "her", "their", "its", "into", "onto", "about", "should", "would",
+    "can", "could", "will", "have", "has", "had", "you", "your",
+}
+
+
+def _content_tokens(text: str) -> set[str]:
+    return {t for t in _TOKEN_RE.findall(text.lower())
+            if len(t) > 2 and t not in _STOPWORDS}
+
 
 _BROADEN_SYSTEM = (
     "You broaden a search query that returned too few relevant documents. "
@@ -137,11 +157,29 @@ class CorrectiveRAGGraph:
             broadened = state["rewritten"]
         return {"rewritten": broadened or state["rewritten"], "loop_count": state["loop_count"] + 1}
 
+    def _lexically_unrelated(self, query: str, relevant: list) -> bool:
+        """Страховка отказа для латинских запросов: если ни один удержанный
+        грейдером чанк не разделяет с запросом ни одного содержательного токена,
+        вопрос вне корпуса (грейдер 3b иногда пропускает шум вопреки промпту).
+        Нелатинские запросы не проверяем — кросс-языковое совпадение токенов
+        невозможно, затвор ложно отказывал бы на валидных вопросах.
+        """
+        if not relevant or not _LATIN_RE.match(query.lower().strip()):
+            return False
+        qtok = _content_tokens(query)
+        if not qtok:
+            return False
+        joined = _content_tokens(" ".join(s.chunk.text for s in relevant))
+        return not (qtok & joined)
+
     def _generate(self, state: RAGState) -> dict:
         relevant = state["relevant"]
-        if not relevant:
+        if not relevant or self._lexically_unrelated(
+            state.get("rewritten") or state["question"], relevant
+        ):
             return {
-                "answer": "Не найдено релевантных фрагментов в базе знаний. "
+                "answer": "No relevant fragments found in the knowledge base. "
+                "Не найдено релевантных фрагментов в базе знаний. "
                 "Попробуйте переформулировать вопрос или переиндексируйте документы."
             }
         context_blocks = "\n\n".join(

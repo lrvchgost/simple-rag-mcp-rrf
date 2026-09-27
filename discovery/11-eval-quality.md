@@ -114,3 +114,10 @@ scripts/
   (gold-preservation 8/12, refusal 0/2), `gen-baseline.json` (fact_ok 3/12);
 - CI: job `eval-retrieval` — tech-подмножество, --fail-under 0.9, без chat-LLM;
   в SSE grep учитывает экранированный внутренний JSON.
+
+## Бaseline после refusal-логики (см. fixes-log №15)
+
+refusal 2/2 (софт-отказ генератора), gold-preservation 9/12, fact_ok 4/12,
+judge 1/12 (advisory). Артефакты: evals/grade-refusal.json, evals/gen-refusal.json.
+Урок: canned-ветка отказа в Corrective RAG недостижима при «unsure→true»-грейдере —
+последнюю линию обороны держит честность генератора («context does not contain...»).
