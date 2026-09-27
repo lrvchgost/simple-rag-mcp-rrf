@@ -61,7 +61,7 @@ jobs:
           echo "MCP server did not start"; docker compose logs rag-mcp; exit 1
       - name: Pull embedding model
         run: docker compose exec -T ollama ollama pull nomic-embed-text
-      - name: Index demo root docs
+      - name: Index demo docs (root + proust top-level, без texts/)
         run: |
           SID=$(curl -s -D - -o /dev/null -X POST http://localhost:8000/mcp \
             -H 'Content-Type: application/json' \
@@ -71,9 +71,11 @@ jobs:
           curl -s -X POST http://localhost:8000/mcp -H 'Content-Type: application/json' \
             -H 'Accept: application/json, text/event-stream' -H "mcp-session-id: $SID" \
             -d '{"jsonrpc":"2.0","method":"notifications/initialized"}' > /dev/null
-          curl -sf -X POST http://localhost:8000/mcp -H 'Content-Type: application/json' \
-            -H 'Accept: application/json, text/event-stream' -H "mcp-session-id: $SID" \
-            -d '{"jsonrpc":"2.0","id":9,"method":"tools/call","params":{"name":"index_folder","arguments":{"folder_path":"/data/docs","glob_pattern":"*"}}}' \
-            | grep -o 'status[^,]*ok' | head -1
+          for FOLDER in /data/docs /data/docs/proust; do
+            curl -sf -X POST http://localhost:8000/mcp -H 'Content-Type: application/json' \
+              -H 'Accept: application/json, text/event-stream' -H "mcp-session-id: $SID" \
+              -d "{\"jsonrpc\":\"2.0\",\"id\":9,\"method\":\"tools/call\",\"params\":{\"name\":\"index_folder\",\"arguments\":{\"folder_path\":\"$FOLDER\",\"glob_pattern\":\"*\"}}}" \
+              | grep -o 'status[^,]*ok' | head -1
+          done
       - name: Retrieval eval (tech subset)
         run: python scripts/eval_retrieval.py --filter tech --fail-under 0.9
