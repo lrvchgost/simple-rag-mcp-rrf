@@ -41,6 +41,7 @@ services:
       MCP_HOST: 0.0.0.0
       MCP_PORT: "8000"
       CHROMA_DIR: /app/data/chroma
+      OLLAMA_TIMEOUT: "600"
     volumes:
       - chroma_data:/app/data
       - ./demo_docs:/data/docs:ro

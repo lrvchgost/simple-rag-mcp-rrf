@@ -56,7 +56,9 @@ def get_context() -> AppContext:
     """Собирает инфраструктуру и домен один раз за жизнь процесса."""
     settings = load_settings()
     embedder = (
-        OllamaEmbedding(settings.ollama_base_url, settings.embedding_model)
+        OllamaEmbedding(
+            settings.ollama_base_url, settings.embedding_model, settings.ollama_timeout
+        )
         if settings.embedding_is_ollama
         else DefaultChromaEmbedding()
     )
