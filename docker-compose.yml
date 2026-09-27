@@ -4,8 +4,9 @@ services:
   ollama:
     image: ollama/ollama:latest
     environment:
-      # -1 = принудительный CPU (по умолчанию).
-      # Для GPU: CUDA_VISIBLE_DEVICES="" docker compose up -d  (пустая строка = автоопределение)
+      # -1 = принудительный CPU (по умолчанию, работает на любом железе).
+      # GPU: docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
+      #      (требует NVIDIA-драйвер + nvidia-container-toolkit)
       CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES:--1}
     volumes:
       - ollama_data:/root/.ollama

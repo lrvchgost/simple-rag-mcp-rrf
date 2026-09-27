@@ -39,7 +39,8 @@ project/
 docker compose up -d
 ```
 
-Эта команда поднимает три сервиса:
+Эта команда поднимает три сервиса (по умолчанию всё на CPU — работает
+на любом железе; для NVIDIA-GPU см. раздел «Вычисления на CPU или GPU» ниже):
 
 | Сервис | Что делает |
 |---|---|
@@ -186,7 +187,8 @@ VS Code / другие клиенты, поддерживающие streamable H
 Если GPU работает стабильно и нужен он:
 
 ```bash
-CUDA_VISIBLE_DEVICES="" docker compose up -d   # пустое значение — автоопределение
+# Требуется: NVIDIA-драйвер + nvidia-container-toolkit на хосте.
+docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
 ```
 
 Проверить, где крутится модель: `docker compose exec ollama ollama ps` — в колонке

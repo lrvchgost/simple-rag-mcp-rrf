@@ -1,0 +1,7 @@
+# GPU-переопределение (NVIDIA): драйвер + nvidia-container-toolkit на хосте.
+# Запуск: docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
+services:
+  ollama:
+    gpus: all
+    environment:
+      CUDA_VISIBLE_DEVICES: ""

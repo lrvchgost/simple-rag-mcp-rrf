@@ -5,7 +5,7 @@
       "type": "remote",
       "url": "http://localhost:8000/mcp",
       "enabled": true,
-      "timeout": 20000
+      "timeout": 600000
     }
   }
 }
