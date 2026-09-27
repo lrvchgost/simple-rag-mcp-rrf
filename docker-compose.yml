@@ -1,0 +1,52 @@
+# Запуск одной командой: docker compose up -d
+# После старта MCP-сервер доступен на http://localhost:8000/mcp
+services:
+  ollama:
+    image: ollama/ollama:latest
+    environment:
+      # -1 = принудительный CPU (по умолчанию).
+      # Для GPU: CUDA_VISIBLE_DEVICES="" docker compose up -d  (пустая строка = автоопределение)
+      CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES:--1}
+    volumes:
+      - ollama_data:/root/.ollama
+    # Раскомментируй, если нужен доступ к Ollama с хоста:
+    # ports:
+    #   - "11434:11434"
+
+  ollama-init:
+    image: ollama/ollama:latest
+    depends_on:
+      - ollama
+    environment:
+      OLLAMA_HOST: http://ollama:11434
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      "echo 'Загрузка моделей (первый раз может занять несколько минут)...' &&
+       ollama pull ${LLM_MODEL:-qwen2.5:3b-instruct} &&
+       ollama pull ${EMBEDDING_MODEL:-nomic-embed-text} &&
+       echo 'Модели готовы'"
+    restart: "no"
+
+  rag-mcp:
+    build: .
+    depends_on:
+      ollama-init:
+        condition: service_completed_successfully
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+      LLM_MODEL: ${LLM_MODEL:-qwen2.5:3b-instruct}
+      EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-ollama}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-nomic-embed-text}
+      MCP_TRANSPORT: http
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: "8000"
+      CHROMA_DIR: /app/data/chroma
+    volumes:
+      - chroma_data:/app/data
+      - ./demo_docs:/data/docs:ro
+    ports:
+      - "8000:8000"
+
+volumes:
+  ollama_data:
+  chroma_data:
