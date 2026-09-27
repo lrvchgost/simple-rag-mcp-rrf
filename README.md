@@ -117,7 +117,7 @@ VS Code / другие клиенты, поддерживающие streamable H
         "CHROMA_DIR": "./data/chroma",
         "LOG_LEVEL": "INFO"          // DEBUG — подробные логи сервера
       },
-      "timeout": 20000               // первый старт: импорт chromadb + восстановление BM25
+      "timeout": 600000              // 10 мин: индексация и первый старт занимают минуты
     }
   }
 }
@@ -133,7 +133,7 @@ VS Code / другие клиенты, поддерживающие streamable H
       "type": "remote",
       "url": "http://localhost:8000/mcp",
       "enabled": true,
-      "timeout": 20000
+      "timeout": 600000
     }
   }
 }
