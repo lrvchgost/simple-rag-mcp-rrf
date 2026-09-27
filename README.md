@@ -165,10 +165,17 @@ VS Code / другие клиенты, поддерживающие streamable H
 2. `index_folder` с `folder_path = ./demo_docs/proust` (или `/data/docs/proust` в контейнере) — большой англоязычный художественный корпус (проверка латентности и объёма).
 3. `index_status` — убедиться, что чанки созданы.
 4. `find_relevant_docs` с `query = "TOKEN_EXPIRY_HOURS"` — точечный BM25-поиск по идентификатору.
-5. `find_relevant_docs` с `query = "VOLUME_COUNT"` или `query = "Мезеглиз"` — поиск по коду/тексту.
-6. `ask_question` с `"Как устроена ротация ключей в AuthService?"` — семантический ответ + источники.
-7. `ask_question` с `"Кто такая Альбертина и что с ней случилось?"` — ответ по художественному корпусу.
-8. `ask_question` с `"Where should we meet Professor Cottard?"` — англоязычный вопрос по корпусу (ожидается: салон/загородный дом Вердюренов — La Raspelière, источники из `proust/texts/`).
+5. `find_relevant_docs` с `query = "VOLUME_COUNT"` или `query = "little phrase"` — поиск по коду/тексту.
+6. `ask_question` с `"How does the RS256 key rotation work in AuthService?"` — семантический ответ + источники
+   (ожидается: смена ключа каждые 90 дней, старые ключи живут в JWKS ещё 7 дней — `architecture.md`).
+7. `ask_question` с `"Who is Albertine and what happened to her?"` — ответ по художественному корпусу
+   (ожидается: Albertine Simonet из «little band» Балбека, в последних томах captive/fugitive, погибает при падении с лошади — `proust/characters.md`).
+8. `ask_question` с `"Where should we meet Professor Cottard?"` — англоязычный вопрос по корпусу
+   (ожидается: загородный дом Вердюренов La Raspelière, источники из `proust/texts/`).
+
+> Корпус на английском — вопросы на английском дают самые надёжные ответы
+> (генерация отвечает на языке вопроса; на «Кто такая Альбертина?» модель
+> будет отвечать по-русски по английскому контексту — качество ниже).
 
 ## Конфигурация (env-переменные)
 
