@@ -46,11 +46,16 @@ jobs:
       - name: Wait for MCP server
         run: |
           for i in $(seq 1 60); do
-            code=$(curl -s -o /dev/null -w '%{http_code}' -X POST http://localhost:8000/mcp \
+            code=$(curl -s --max-time 5 -o /dev/null -w '%{http_code}' \
+              -X POST http://localhost:8000/mcp \
               -H 'Content-Type: application/json' \
               -H 'Accept: application/json, text/event-stream' \
-              -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"ci","version":"1.0"}}}')
-            [ "$code" = "200" ] && exit 0
+              -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"ci","version":"1.0"}}}' \
+              || true)
+            if [ "$code" = "200" ]; then
+              echo "MCP server is up (attempt $i)"
+              exit 0
+            fi
             sleep 2
           done
           echo "MCP server did not start"; docker compose logs rag-mcp; exit 1
