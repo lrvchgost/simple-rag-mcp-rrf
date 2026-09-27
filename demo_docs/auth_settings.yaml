@@ -1,0 +1,23 @@
+# Настройки окружения AuthService (production)
+service:
+  name: auth-service
+  replicas: 3
+  port: 8443
+
+auth:
+  password_hash_cost: 12
+  access_token_ttl_minutes: 60
+  refresh_token_ttl_days: 30
+  TOKEN_EXPIRY_HOURS: 24        # для совместимости со старыми клиентами: срок жизни legacy-токена
+  max_sessions_per_user: 5
+  key_rotation_days: 90
+
+redis:
+  host: redis-prod.internal
+  port: 6379
+  session_prefix: "session:"
+  session_ttl_days: 30
+
+kafka:
+  brokers: ["kafka1:9092", "kafka2:9092", "kafka3:9092"]
+  audit_topic: auth.audit

@@ -1,0 +1,19 @@
+{
+  "notifications": {
+    "slack_webhook": "https://hooks.slack.com/services/T000/B000/xxxx",
+    "email_alerts": true,
+    "recipients": ["oncall@company.io", "security@company.io"]
+  },
+  "monitoring": {
+    "prometheus_url": "http://prometheus.monitoring:9090",
+    "grafana_dashboard": "auth-service-overview",
+    "alerts": [
+      {"name": "login_failure_rate", "threshold": "0.5%", "window": "30m"},
+      {"name": "token_validation_errors", "threshold": "10/min", "window": "5m"}
+    ]
+  },
+  "backup": {
+    "redis_snapshot_cron": "0 */6 * * *",
+    "retention_days": 14
+  }
+}
