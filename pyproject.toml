@@ -1,0 +1,45 @@
+[project]
+name = "rag-kb-mcp"
+version = "0.1.0"
+description = "RAG Knowledge Base MCP server: local folder -> searchable KB, Corrective RAG on LangGraph, local LLM via Ollama"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "fastmcp>=2.3,<3",
+    "langgraph>=0.2,<1",
+    "langchain-text-splitters>=0.2,<1",
+    "chromadb>=0.5,<2",
+    "rank-bm25>=0.2.2",
+    "pyyaml>=6",
+    "requests>=2.31",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "ruff>=0.5",
+]
+
+[project.scripts]
+rag-kb-mcp = "src.server:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
