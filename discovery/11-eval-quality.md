@@ -100,3 +100,17 @@ scripts/
 - Сиды вопросов: 03-grader-generator.md, 06-hybrid-search.md.
 - Judge-ограничения и бюджет CPU: 01-ollama-gpu.md, 10-open-topics.md.
 - Тестовый вопрос в README (Коттар, f22b817) — кандидат в golden-набор.
+
+## Статус реализации (2026-09-27, сессия 2)
+
+План выполнен шагами 1-6:
+- `evals/golden.json` v3 — 14 вопросов (факты на английском — v2-урок: 3b-judge
+  не осилил кросс-языковой матч, первый прогон «12/12 галлюцинаций» был
+  артефактом инструмента);
+- `scripts/eval_retrieval.py` — recall@5 + MRR + режим --grade + --filter +
+  --fail-under; ловушки парсинга: SSE-события режутся на data-строки, r.text
+  декодирует UTF-8 как latin-1, C1-символы кириллицы ломают splitlines;
+- `evals/baseline.json` (recall 1.0 / MRR 0.625), `grade-baseline.json`
+  (gold-preservation 8/12, refusal 0/2), `gen-baseline.json` (fact_ok 3/12);
+- CI: job `eval-retrieval` — tech-подмножество, --fail-under 0.9, без chat-LLM;
+  в SSE grep учитывает экранированный внутренний JSON.

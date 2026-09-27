@@ -1,0 +1,172 @@
+{
+  "_meta": {
+    "description": "Golden-набор для оценки RAG. source_root — корень, как его видит find_relevant_docs в контейнере (/data/docs). line = номер строки в файле корпуса.",
+    "source_root": "/data/docs",
+    "version": 3,
+    "created": "2026-09-27"
+  },
+  "questions": [
+    {
+      "id": "tech-token-expiry-def",
+      "question": "Where is TOKEN_EXPIRY_HOURS defined with its default value?",
+      "expected_chunks": [
+        {
+          "source": "auth_settings.yaml",
+          "line": 11,
+          "quote": "TOKEN_EXPIRY_HOURS: 24"
+        }
+      ],
+      "fact": "TOKEN_EXPIRY_HOURS: 24 for backward compatibility"
+    },
+    {
+      "id": "tech-key-rotation",
+      "question": "How often is the RS256 private key rotated?",
+      "expected_chunks": [
+        {
+          "source": "architecture.md",
+          "line": 22,
+          "quote": "меняется каждые 90 дней"
+        }
+      ],
+      "fact": "RS256 private key rotates every 90 days, old keys stay in JWKS for 7 days"
+    },
+    {
+      "id": "tech-token-service",
+      "question": "Which service reads TOKEN_EXPIRY_HOURS from auth_settings.yaml?",
+      "expected_chunks": [
+        {
+          "source": "deploy_notes.txt",
+          "line": 10,
+          "quote": "сервисом TokenService"
+        }
+      ],
+      "fact": "TokenService reads TOKEN_EXPIRY_HOURS from auth_settings.yaml"
+    },
+    {
+      "id": "tech-volume-count",
+      "question": "What is VOLUME_COUNT set to?",
+      "expected_chunks": [
+        {
+          "source": "proust/settings.yaml",
+          "line": 6,
+          "quote": "VOLUME_COUNT: 7"
+        },
+        {
+          "source": "proust/library.py",
+          "line": 3,
+          "quote": "VOLUME_COUNT: 7"
+        }
+      ],
+      "fact": "VOLUME_COUNT = 7"
+    },
+    {
+      "id": "tech-verdurins-themes",
+      "question": "What role do the Verdurins play in the themes overview?",
+      "expected_chunks": [
+        {
+          "source": "proust/themes.txt",
+          "line": 19,
+          "quote": "The Verdurins are"
+        }
+      ],
+      "fact": "SNOBISHNESS: Society is the second religion of the cycle, the Verdurins"
+    },
+    {
+      "id": "proust-cottard-meet",
+      "question": "Where should we meet Professor Cottard?",
+      "expected_chunks": [
+        {
+          "source": "proust/texts/vol2_01_opening.md",
+          "line": 69,
+          "quote": "country house La Raspelière"
+        }
+      ],
+      "fact": "at Mme Verdurin's country house La Raspeliere"
+    },
+    {
+      "id": "proust-cottard-summer",
+      "question": "Where does Professor Cottard spend his summers?",
+      "expected_chunks": [
+        {
+          "source": "proust/texts/vol2_01_opening.md",
+          "line": 69,
+          "quote": "country house La Raspelière"
+        }
+      ],
+      "fact": "at Mme Verdurin's country house La Raspeliere"
+    },
+    {
+      "id": "proust-vinteuil-neighbours",
+      "question": "Who said M. Vinteuil has nice neighbours?",
+      "expected_chunks": [
+        {
+          "source": "proust/texts/vol1_02_opening.md",
+          "line": 137,
+          "quote": "nice neighbours,\" cried my aunt"
+        }
+      ],
+      "fact": "aunt Celine said M. Vinteuil is not the only one who has nice neighbours",
+      "note": "кейс «сёстры»: правильный чанк соседствует с похожим отвлекающим"
+    },
+    {
+      "id": "proust-odette",
+      "question": "Who is Odette de Crecy?",
+      "expected_chunks": [
+        {
+          "source": "proust/characters.md",
+          "line": 9,
+          "quote": "## Odette de Crécy"
+        }
+      ],
+      "fact": "Odette de Crecy, Swann's wife, a beauty of the demimonde"
+    },
+    {
+      "id": "proust-swann-motive",
+      "question": "What is said about Swann's motives for marrying Odette?",
+      "expected_chunks": [
+        {
+          "source": "proust/texts/vol2_03_opening.md",
+          "line": 62,
+          "quote": "if Swann married Odette it was in order to"
+        }
+      ],
+      "fact": "Swann married Odette in order to get closer to the Guermantes circle"
+    },
+    {
+      "id": "proust-gilberte",
+      "question": "Whose daughter is Gilberte?",
+      "expected_chunks": [
+        {
+          "source": "proust/characters.md",
+          "line": 14,
+          "quote": "Daughter of Swann and Odette"
+        }
+      ],
+      "fact": "Gilberte is the daughter of Swann and Odette"
+    },
+    {
+      "id": "proust-vinteuil-sonata",
+      "question": "What did Vinteuil compose that contains the little phrase?",
+      "expected_chunks": [
+        {
+          "source": "proust/characters.md",
+          "line": 6,
+          "quote": "Vinteuil's sonata with its «little phrase»"
+        }
+      ],
+      "fact": "Vinteuil's sonata contains the little phrase"
+    },
+    {
+      "id": "refusal-swallow",
+      "question": "What is the airspeed of an unladen swallow?",
+      "expected_chunks": [],
+      "expect_refusal": true
+    },
+    {
+      "id": "refusal-kubernetes",
+      "question": "How do I deploy this service to Kubernetes?",
+      "expected_chunks": [],
+      "expect_refusal": true
+    }
+  ]
+}

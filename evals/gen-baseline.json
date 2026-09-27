@@ -1,0 +1,177 @@
+{
+  "rows": [
+    {
+      "id": "tech-token-expiry-def",
+      "category": "tech",
+      "answer": "The provided context does not contain any information about TOKEN_EXPIRY_HOURS or its default value.",
+      "loops": 2,
+      "fact_coverage": 0.57,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "TOKEN_EXPIRY_HOURS: 24 for backward compatibility"
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "tech-key-rotation",
+      "category": "tech",
+      "answer": "The RS256 private key is rotated every 90 days.",
+      "loops": 2,
+      "fact_coverage": 0.46,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "[\"The RS256 private key is rotated every 90 days.\"]"
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "tech-token-service",
+      "category": "tech",
+      "answer": "The context provided does not specify which service reads from the auth_settings.yaml file.",
+      "loops": 2,
+      "fact_coverage": 0.56,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "The context provided does not specify which service reads from the auth_settings.yaml file."
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "tech-volume-count",
+      "category": "tech",
+      "answer": "VOLUME_COUNT is set to 7.",
+      "loops": 0,
+      "fact_coverage": 1.0,
+      "fact_ok": true,
+      "faithful": true,
+      "unsupported": [
+        "\"VOLUME_COUNT = 7\"",
+        "\"VOLUME_COUNT is set to 7.\""
+      ],
+      "verdict": "OK"
+    },
+    {
+      "id": "tech-verdurins-themes",
+      "category": "tech",
+      "answer": "The Verdurins' \"little clan\" is mentioned in relation to Odette de Crécy, who is described as the \"lady in pink\" from the Botticelli fresco and the \"idol\" of the Verdurins' \"little clan\". However, the context does not provide information on the role the Verdurins play in the themes overview.",
+      "loops": 0,
+      "fact_coverage": 0.17,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "The Verdurins' 'little clan' is mentioned in relation to Odette de Crécy, who is described as the 'lady in pink' from the Botticelli fresco and the 'idol' of the Verdurins' 'little clan'. However, the context does not provide information on the role the Verdurins play in the themes overview."
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "proust-cottard-meet",
+      "category": "proust",
+      "answer": "We should meet Professor Cottard in Mme. Verdurin's country house La Raspelière.",
+      "loops": 0,
+      "fact_coverage": 0.8,
+      "fact_ok": true,
+      "faithful": false,
+      "unsupported": [
+        "We should meet Professor Cottard in Mme. Verdurin's country house La Raspelière"
+      ],
+      "verdict": "OK"
+    },
+    {
+      "id": "proust-cottard-summer",
+      "category": "proust",
+      "answer": "The context does not provide any information about where Professor Cottard spends his summers.",
+      "loops": 0,
+      "fact_coverage": 0.2,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "The context does not provide any information about where Professor Cottard spends his summers."
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "proust-vinteuil-neighbours",
+      "category": "proust",
+      "answer": "Céline said that M. Vinteuil has nice neighbours.",
+      "loops": 0,
+      "fact_coverage": 0.45,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "Céline said that M. Vinteuil has nice neighbors."
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "proust-odette",
+      "category": "proust",
+      "answer": "Odette de Crecy is the wife of the Princesse des Laumes, who is expected to become the Duchesse de Guermantes upon her father-in-law's death.",
+      "loops": 0,
+      "fact_coverage": 0.5,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "[Odette de Crecy] a beauty of the demimonde"
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "proust-swann-motive",
+      "category": "proust",
+      "answer": "Swann's motives for marrying Odette are primarily to present her and their daughter Gilberte to the Duchesse de Guermantes, without anyone else knowing about it. This is his sole social ambition.",
+      "loops": 0,
+      "fact_coverage": 0.38,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "Swann's motives for marrying Odette are primarily to present her and their daughter Gilberte to the Duchesse de Guermantes, without anyone else knowing about it. This is his sole social ambition."
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "proust-gilberte",
+      "category": "proust",
+      "answer": "There is no information provided about Gilberte being a daughter of anyone.",
+      "loops": 0,
+      "fact_coverage": 0.4,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "Gilberte is the daughter of Swann and Odette"
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "proust-vinteuil-sonata",
+      "category": "proust",
+      "answer": "Vinteuil's sonata contains the little phrase.",
+      "loops": 0,
+      "fact_coverage": 1.0,
+      "fact_ok": true,
+      "faithful": false,
+      "unsupported": [
+        "Vinteuil's sonata contains the little phrase"
+      ],
+      "verdict": "OK"
+    },
+    {
+      "id": "refusal-swallow",
+      "category": "refusal",
+      "answer": "The context provided does not contain any information about the airspeed of an unladen swallow.",
+      "loops": 1,
+      "refusal_ok": false,
+      "verdict": "REFUSAL FAIL"
+    },
+    {
+      "id": "refusal-kubernetes",
+      "category": "refusal",
+      "answer": "The provided context does not contain any information about deploying a service to Kubernetes. It only includes details about a service named 'auth-service' and a client-side JavaScript file for a service called 'AuthService'.",
+      "loops": 0,
+      "refusal_ok": false,
+      "verdict": "REFUSAL FAIL"
+    }
+  ]
+}
