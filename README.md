@@ -13,9 +13,9 @@ MCP-сервер превращает локальную папку с доку�
 project/
 ├── src/                     # код сервера (server.py, config.py, domain/, infrastructure/)
 ├── tests/                   # pytest без сети и без LLM (fake-реализации интерфейсов)
-├── demo_docs/               # технический демо-корпус (7 файлов, 6 форматов)
-├── data/proust/             # художественный корпус ~550 КБ (главы + рукописные обзоры)
-├── scripts/download_corpus.py  # загрузчик глав data/proust/texts (Project Gutenberg)
+├── demo_docs/               # демо-корпус: 7 технических файлов (6 форматов)
+│   └── proust/              # + художественный корпус ~550 КБ (главы + обзоры)
+├── scripts/download_corpus.py  # загрузчик глав demo_docs/proust/texts (Project Gutenberg)
 ├── docker-compose.yml       # ollama + автозагрузка моделей + сервер (одна команда)
 ├── Dockerfile
 ├── opencode.json            # готовый конфиг MCP для opencode (remote-вариант)
@@ -141,7 +141,7 @@ VS Code / другие клиенты, поддерживающие streamable H
 
 После перезапуска opencode инструменты доступны с префиксом имени сервера:
 `rag-kb_index_folder`, `rag-kb_ask_question`, `rag-kb_find_relevant_docs`,
-`rag-kb_index_status` — вызывать можно по имени («проиндексируй data/proust
+`rag-kb_index_status` — вызывать можно по имени («проиндексируй demo_docs/proust
 через rag-kb») или явно («use the rag-kb_find_relevant_docs tool…»).
 
 ## Как пользоваться (демо-сценарий)
@@ -151,9 +151,9 @@ VS Code / другие клиенты, поддерживающие streamable H
 | Корпус | Содержимое | Объём |
 |---|---|---|
 | `demo_docs/` | технические документы (архитектура AuthService, конфиги, код) — 7 файлов, все 6 форматов из ТЗ | ~7 КБ |
-| `data/proust/` | корпус по «В поисках утраченного времени» Пруста: рукописные обзоры + 13 глав-выдержек томов 1–3 в переводе C. K. Scott Moncrieff (весь текст на английском, public domain) | ~550 КБ, ~820 чанков |
+| `demo_docs/proust/` | корпус по «В поисках утраченного времени» Пруста: рукописные обзоры + 13 глав-выдержек томов 1–3 в переводе C. K. Scott Moncrieff (весь текст на английском, public domain) | ~550 КБ, ~820 чанков |
 
-Главы `data/proust/texts/` скачаны с Project Gutenberg и нарезаны скриптом (воспроизводимо):
+Главы `demo_docs/proust/texts/` скачаны с Project Gutenberg и нарезаны скриптом (воспроизводимо):
 
 ```bash
 .venv/bin/python scripts/download_corpus.py
@@ -162,7 +162,7 @@ VS Code / другие клиенты, поддерживающие streamable H
 Сценарий проверки:
 
 1. `index_folder` с `folder_path = ./demo_docs` (или `/data/docs` в контейнере) — технический корпус.
-2. `index_folder` с `folder_path = ./data/proust` — большой англоязычный художественный корпус (проверка латентности и объёма).
+2. `index_folder` с `folder_path = ./demo_docs/proust` (или `/data/docs/proust` в контейнере) — большой англоязычный художественный корпус (проверка латентности и объёма).
 3. `index_status` — убедиться, что чанки созданы.
 4. `find_relevant_docs` с `query = "TOKEN_EXPIRY_HOURS"` — точечный BM25-поиск по идентификатору.
 5. `find_relevant_docs` с `query = "VOLUME_COUNT"` или `query = "Мезеглиз"` — поиск по коду/тексту.
@@ -213,7 +213,7 @@ opencode --log-level DEBUG --print-logs     # или вывести логи в 
 ### 2. Логи RAG-сервера
 
 Каждый вызов инструмента пишется строкой вида
-`tool=index_folder args={'folder_path': 'data/proust', ...}` (stderr сервера).
+`tool=index_folder args={'folder_path': 'demo_docs/proust', ...}` (stderr сервера).
 Уровень настраивается переменной `LOG_LEVEL` (по умолчанию `INFO`):
 
 ```bash

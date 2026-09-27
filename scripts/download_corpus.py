@@ -3,7 +3,7 @@
 
 Скачивает три тома в переводе C. K. Scott Moncrieff (public domain) с
 Project Gutenberg, вырезает служебный текст, делит книгу на части по
-заголовкам и нарезает главы в data/proust/texts/ (~45 КБ на файл,
+заголовкам и нарезает главы в demo_docs/proust/texts/ (~45 КБ на файл,
 суммарно ~500 КБ — как у прежнего синтетического корпуса). Запуск:
 
     .venv/bin/python scripts/download_corpus.py
@@ -46,7 +46,7 @@ MAX_VOLUME_KB = 165   # бюджет одного тома в итоговом �
 CHUNK_TARGET_KB = 45  # примерный размер одного файла-главы
 SLUG_RE = re.compile(r"[^a-z0-9]+")
 
-OUT_DIR = Path(__file__).resolve().parent.parent / "data" / "proust" / "texts"
+OUT_DIR = Path(__file__).resolve().parent.parent / "demo_docs" / "proust" / "texts"
 
 
 def fetch(eid: int) -> str:
