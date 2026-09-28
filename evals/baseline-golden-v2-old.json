@@ -1,47 +1,47 @@
 {
-  "golden_version": 3,
+  "golden_version": 2,
   "top_k": 5,
   "line_window": 30,
   "aggregate": {
     "n": 12,
     "recall@k": 1.0,
-    "mrr": 0.701
+    "mrr": 0.625
   },
   "by_category": {
     "proust": {
       "n": 7,
       "recall@k": 1.0,
-      "mrr": 0.738
+      "mrr": 0.762
     },
     "tech": {
       "n": 5,
       "recall@k": 1.0,
-      "mrr": 0.65
+      "mrr": 0.433
     }
   },
   "rows": [
     {
       "id": "tech-token-expiry-def",
       "category": "tech",
-      "hit_rank": 1,
+      "hit_rank": 2,
       "matched": "auth_settings.yaml:None"
     },
     {
       "id": "tech-key-rotation",
       "category": "tech",
-      "hit_rank": 4,
+      "hit_rank": 3,
       "matched": "architecture.md:22"
     },
     {
       "id": "tech-token-service",
       "category": "tech",
-      "hit_rank": 1,
+      "hit_rank": 2,
       "matched": "deploy_notes.txt:1"
     },
     {
       "id": "tech-volume-count",
       "category": "tech",
-      "hit_rank": 2,
+      "hit_rank": 3,
       "matched": "settings.yaml:None"
     },
     {
@@ -59,7 +59,7 @@
     {
       "id": "proust-cottard-summer",
       "category": "proust",
-      "hit_rank": 3,
+      "hit_rank": 2,
       "matched": "vol2_01_opening.md:67"
     },
     {

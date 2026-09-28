@@ -13,16 +13,29 @@ from src.domain.models import Chunk, ScoredChunk
 _TOKEN_RE = re.compile(r"[a-zа-яё0-9]+")
 _CAMEL_RE = re.compile(r"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])")
 
+def _stem(token: str) -> str:
+    """Лёгкий стемминг английских окончаний: daughters -> daughter, cities -> city.
+
+    Применяется и к запросу, и к корпусу, поэтому матчинг согласован;
+    кириллица не затрагивается (правило смотрит только латинское "s").
+    """
+    if token.endswith("ies") and len(token) > 4:
+        return token[:-3] + "y"
+    if token.endswith("s") and not token.endswith(("ss", "us", "is")) and len(token) > 3:
+        return token[:-1]
+    return token
+
 
 def tokenize(text: str) -> list[str]:
     """Токены для BM25: нижний регистр, camelCase и snake_case разбираются на слова.
 
-    "TOKEN_EXPIRY_HOURS" -> ["token", "expiry", "hours"],
-    "getAccessToken"     -> ["get", "access", "token"].
+    "TOKEN_EXPIRY_HOURS" -> ["token", "expiry", "hour"],
+    "getAccessToken"     -> ["get", "access", "token"],
+    "daughters"          -> ["daughter"].
     """
     text = _CAMEL_RE.sub(" ", text)
     text = text.replace("_", " ").replace("-", " ").lower()
-    return _TOKEN_RE.findall(text)
+    return [_stem(t) for t in _TOKEN_RE.findall(text)]
 
 
 class BM25SparseStorage(SparseStorage):
