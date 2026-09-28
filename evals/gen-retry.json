@@ -1,0 +1,177 @@
+{
+  "rows": [
+    {
+      "id": "tech-token-expiry-def",
+      "category": "tech",
+      "answer": "TOKEN_EXPIRY_HOURS is defined with its default value in the file auth_settings.yaml.",
+      "loops": 2,
+      "fact_coverage": 0.43,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "TOKEN_EXPIRY_HOURS: 24"
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "tech-key-rotation",
+      "category": "tech",
+      "answer": "The RS256 private key is rotated every 90 days.",
+      "loops": 0,
+      "fact_coverage": 0.46,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "The RS256 private key stays in JWKS for 7 days."
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "tech-token-service",
+      "category": "tech",
+      "answer": "TokenService reads TOKEN_EXPIRY_HOURS from auth_settings.yaml.",
+      "loops": 0,
+      "fact_coverage": 1.0,
+      "fact_ok": true,
+      "faithful": false,
+      "unsupported": [
+        "TokenService reads TOKEN_EXPIRY_HOURS from auth_settings.yaml"
+      ],
+      "verdict": "OK"
+    },
+    {
+      "id": "tech-volume-count",
+      "category": "tech",
+      "answer": "VOLUME_COUNT is set to 7.",
+      "loops": 0,
+      "fact_coverage": 1.0,
+      "fact_ok": true,
+      "faithful": true,
+      "unsupported": [
+        "\"VOLUME_COUNT = 7\"",
+        "\"VOLUME_COUNT is set to 7.\""
+      ],
+      "verdict": "OK"
+    },
+    {
+      "id": "tech-verdurins-themes",
+      "category": "tech",
+      "answer": "The Verdurins play a role of being elevated in society, which contrasts with their eventual dissolution into the Guermantes. This contrast highlights the theme of snobism, as the elevation of the Verdurins represents a rise of a formerly \"low\" family, which wounds its former rulers.",
+      "loops": 0,
+      "fact_coverage": 0.33,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "SNOBISHNESS: Society is the second religion of the cycle, the Verdurins"
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "proust-cottard-meet",
+      "category": "proust",
+      "answer": "The text does not specify a particular place to meet Professor Cottard.",
+      "loops": 1,
+      "fact_coverage": 0.0,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "The text does not specify a particular place to meet Professor Cottard."
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "proust-cottard-summer",
+      "category": "proust",
+      "answer": "The provided context does not contain any information about where Professor Cottard spends his summers.",
+      "loops": 0,
+      "fact_coverage": 0.2,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "The provided context does not contain any information about where Professor Cottard spends his summers."
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "proust-vinteuil-neighbours",
+      "category": "proust",
+      "answer": "Aunt Céline said that M. Vinteuil has nice neighbours.",
+      "loops": 1,
+      "fact_coverage": 0.55,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "Aunt Céline said that M. Vinteuil has nice neighbors."
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "proust-odette",
+      "category": "proust",
+      "answer": "Odette de Crecy is the name of a character in the text, but her full identity or background is not provided in the given context.",
+      "loops": 1,
+      "fact_coverage": 0.33,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "[Odette de Crecy] is the name of a character in the text, but her full identity or background is not provided in the given context."
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "proust-swann-motive",
+      "category": "proust",
+      "answer": "Swann's motives for marrying Odette are described as being driven by his desire to present her and their daughter Gilberte to the Duchesse de Guermantes, as she was the only person he considered when thinking about his possible marriage with Odette.",
+      "loops": 1,
+      "fact_coverage": 0.38,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "Swann's motives for marrying Odette are described as being driven by his desire to present her and their daughter Gilberte to the Duchesse de Guermantes, as she was the only person he considered when thinking about his possible marriage with Odette."
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "proust-gilberte",
+      "category": "proust",
+      "answer": "No relevant fragments found in the knowledge base. Не найдено релевантных фрагментов в базе знаний. Попробуйте переформулировать вопрос или переиндексируйте документы.",
+      "loops": 2,
+      "fact_coverage": 0.0,
+      "fact_ok": false,
+      "faithful": false,
+      "unsupported": [
+        "No relevant fragments found in the knowledge base. Не найдено релевантных фрагментов в базе знаний. Попробуйте переформулировать вопрос или переиндексируйте документы."
+      ],
+      "verdict": "FACT MISS"
+    },
+    {
+      "id": "proust-vinteuil-sonata",
+      "category": "proust",
+      "answer": "Vinteuil's sonata contains the little phrase.",
+      "loops": 0,
+      "fact_coverage": 1.0,
+      "fact_ok": true,
+      "faithful": false,
+      "unsupported": [
+        "Vinteuil's sonata contains the little phrase"
+      ],
+      "verdict": "OK"
+    },
+    {
+      "id": "refusal-swallow",
+      "category": "refusal",
+      "answer": "The context provided does not contain any information related to the airspeed of an unladen swallow.",
+      "loops": 0,
+      "refusal_ok": true,
+      "verdict": "refusal OK"
+    },
+    {
+      "id": "refusal-kubernetes",
+      "category": "refusal",
+      "answer": "The provided context does not contain information on how to deploy a service to Kubernetes. It includes excerpts from different sources discussing various topics such as gratitude, migration of Redis sessions, and Proust's text. There is no specific information related to deploying a service to Kubernetes.",
+      "loops": 0,
+      "refusal_ok": true,
+      "verdict": "refusal OK"
+    }
+  ]
+}

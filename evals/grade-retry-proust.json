@@ -13,10 +13,10 @@
     {
       "id": "proust-cottard-summer",
       "category": "proust",
-      "gold_in_pool_rank": 2,
-      "chunks_relevant": 1,
+      "gold_in_pool_rank": 3,
+      "chunks_relevant": 2,
       "loops": 2,
-      "gold_preserved": false
+      "gold_preserved": true
     },
     {
       "id": "proust-vinteuil-neighbours",
@@ -30,39 +30,33 @@
       "id": "proust-odette",
       "category": "proust",
       "gold_in_pool_rank": 1,
-      "chunks_relevant": 5,
-      "loops": 2,
-      "gold_preserved": true
+      "chunks_relevant": 2,
+      "loops": 1,
+      "gold_preserved": false
     },
     {
       "id": "proust-swann-motive",
       "category": "proust",
       "gold_in_pool_rank": 1,
-      "error": true,
-      "chunks_relevant": null,
-      "loops": null,
-      "gold_preserved": null,
-      "refusal_ok": null
+      "chunks_relevant": 4,
+      "loops": 1,
+      "gold_preserved": true
     },
     {
       "id": "proust-gilberte",
       "category": "proust",
-      "gold_in_pool_rank": null,
-      "error": true,
-      "chunks_relevant": null,
-      "loops": null,
-      "gold_preserved": null,
-      "refusal_ok": null
+      "gold_in_pool_rank": 1,
+      "chunks_relevant": 1,
+      "loops": 2,
+      "gold_preserved": false
     },
     {
       "id": "proust-vinteuil-sonata",
       "category": "proust",
-      "gold_in_pool_rank": null,
-      "error": true,
-      "chunks_relevant": null,
-      "loops": null,
-      "gold_preserved": null,
-      "refusal_ok": null
+      "gold_in_pool_rank": 3,
+      "chunks_relevant": 3,
+      "loops": 0,
+      "gold_preserved": true
     }
   ]
 }
