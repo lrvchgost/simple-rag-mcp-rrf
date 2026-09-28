@@ -1,0 +1,96 @@
+{
+  "golden_version": 3,
+  "top_k": 5,
+  "line_window": 30,
+  "aggregate": {
+    "n": 12,
+    "recall@k": 1.0,
+    "mrr": 0.625
+  },
+  "by_category": {
+    "proust": {
+      "n": 7,
+      "recall@k": 1.0,
+      "mrr": 0.762
+    },
+    "tech": {
+      "n": 5,
+      "recall@k": 1.0,
+      "mrr": 0.433
+    }
+  },
+  "rows": [
+    {
+      "id": "tech-token-expiry-def",
+      "category": "tech",
+      "hit_rank": 2,
+      "matched": "auth_settings.yaml:None"
+    },
+    {
+      "id": "tech-key-rotation",
+      "category": "tech",
+      "hit_rank": 3,
+      "matched": "architecture.md:22"
+    },
+    {
+      "id": "tech-token-service",
+      "category": "tech",
+      "hit_rank": 2,
+      "matched": "deploy_notes.txt:1"
+    },
+    {
+      "id": "tech-volume-count",
+      "category": "tech",
+      "hit_rank": 3,
+      "matched": "settings.yaml:None"
+    },
+    {
+      "id": "tech-verdurins-themes",
+      "category": "tech",
+      "hit_rank": 2,
+      "matched": "themes.txt:19"
+    },
+    {
+      "id": "proust-cottard-meet",
+      "category": "proust",
+      "hit_rank": 1,
+      "matched": "vol2_01_opening.md:67"
+    },
+    {
+      "id": "proust-cottard-summer",
+      "category": "proust",
+      "hit_rank": 2,
+      "matched": "vol2_01_opening.md:67"
+    },
+    {
+      "id": "proust-vinteuil-neighbours",
+      "category": "proust",
+      "hit_rank": 2,
+      "matched": "vol1_02_opening.md:137"
+    },
+    {
+      "id": "proust-odette",
+      "category": "proust",
+      "hit_rank": 1,
+      "matched": "characters.md:1"
+    },
+    {
+      "id": "proust-swann-motive",
+      "category": "proust",
+      "hit_rank": 1,
+      "matched": "vol2_03_opening.md:53"
+    },
+    {
+      "id": "proust-gilberte",
+      "category": "proust",
+      "hit_rank": 1,
+      "matched": "characters.md:1"
+    },
+    {
+      "id": "proust-vinteuil-sonata",
+      "category": "proust",
+      "hit_rank": 3,
+      "matched": "characters.md:1"
+    }
+  ]
+}

@@ -42,6 +42,7 @@ class FakeVectorStorage(VectorStorage):
         self._chunks: dict[str, tuple[Chunk, list[float]]] = {}
         self._canned = list(canned) if canned else None
         self.search_calls = 0
+        self.queries: list[str] = []
 
     def add(self, chunks: list[Chunk], embeddings: list[list[float]]) -> None:
         for chunk, vector in zip(chunks, embeddings, strict=False):
@@ -54,6 +55,7 @@ class FakeVectorStorage(VectorStorage):
 
     def search(self, query: str, k: int) -> list[ScoredChunk]:
         self.search_calls += 1
+        self.queries.append(query)
         if self._canned is not None:
             idx = min(self.search_calls, len(self._canned)) - 1
             return self._canned[idx][:k]

@@ -13,7 +13,7 @@
 Режим --grade: для каждого вопроса сравнивает пул до грейдера
 (find_relevant_docs) с результатом ask_question (sources/stats):
 - gold_preserved — дошёл ли золотой чанк до генерации (end-to-end,
-  включая rewrite-петлю);
+  включая retry-петлю rewrite/broaden);
 - chunks_relevant — сколько чанков грейдер удержал из top_k;
 - refusal-вопросы: честный отказ ("Не найдено релевантных фрагментов").
 Медленный режим: ask_question ~30-70 c на вопрос на CPU.
@@ -118,14 +118,30 @@ def grade_mode(args) -> int:
     """Оценка грейдера: сохранение gold + шум + честный отказ."""
     golden = json.loads(GOLDEN.read_text(encoding="utf-8"))
     questions = golden["questions"]
+    if args.filter:
+        questions = [q for q in questions
+                     if q["id"].startswith(args.filter + "-")]
     session, sid = mcp_session(args.host)
 
     rows = []
     for i, q in enumerate(questions, start=1):
         row = {"id": q["id"], "category": q["id"].split("-")[0]}
-        pool = call_tool(session, args.host, sid, "find_relevant_docs",
-                         {"query": q["question"], "top_k": args.top_k},
-                         call_id=100 + i)
+        pool = None
+        for attempt in (1, 2):  # transient-зависания Ollama не должны ронять весь прогон
+            try:
+                pool = call_tool(session, args.host, sid, "find_relevant_docs",
+                                 {"query": q["question"], "top_k": args.top_k},
+                                 call_id=100 + i)
+                break
+            except requests.RequestException as exc:
+                print(f"  !! {q['id']}: find_relevant_docs попытка {attempt} "
+                      f"не удалась ({exc.__class__.__name__})")
+        if pool is None:
+            rows.append({"id": q["id"], "category": q["id"].split("-")[0],
+                         "gold_in_pool_rank": None, "error": True,
+                         "chunks_relevant": None, "loops": None,
+                         "gold_preserved": None, "refusal_ok": None})
+            continue
         results = pool.get("results", [])
         gold_rank = find_hit(results, q["expected_chunks"], None,
                              args.line_window) \

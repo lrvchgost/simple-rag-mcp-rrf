@@ -1,0 +1,46 @@
+{
+  "mode": "grade",
+  "golden_version": 3,
+  "rows": [
+    {
+      "id": "tech-token-expiry-def",
+      "category": "tech",
+      "gold_in_pool_rank": 2,
+      "chunks_relevant": 2,
+      "loops": 0,
+      "gold_preserved": false
+    },
+    {
+      "id": "tech-key-rotation",
+      "category": "tech",
+      "gold_in_pool_rank": 3,
+      "chunks_relevant": 3,
+      "loops": 0,
+      "gold_preserved": true
+    },
+    {
+      "id": "tech-token-service",
+      "category": "tech",
+      "gold_in_pool_rank": 2,
+      "chunks_relevant": 4,
+      "loops": 0,
+      "gold_preserved": true
+    },
+    {
+      "id": "tech-volume-count",
+      "category": "tech",
+      "gold_in_pool_rank": 3,
+      "chunks_relevant": 3,
+      "loops": 1,
+      "gold_preserved": true
+    },
+    {
+      "id": "tech-verdurins-themes",
+      "category": "tech",
+      "gold_in_pool_rank": 2,
+      "chunks_relevant": 5,
+      "loops": 0,
+      "gold_preserved": true
+    }
+  ]
+}

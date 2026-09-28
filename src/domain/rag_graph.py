@@ -1,6 +1,9 @@
 """CorrectiveRAGGraph: оркестрация пайплайна ответа на langgraph.StateGraph.
 
-Узлы: Rewrite -> Retrieve -> Grade -> (Generate | Broaden -> Retrieve, max N циклов).
+Узлы: Retrieve -> Grade -> (Generate | Rewrite -> Retrieve | Broaden -> Retrieve).
+Первый поиск всегда идёт по исходному вопросу пользователя (rewrite мог бы
+размыть точные идентификаторы вида TOKEN_EXPIRY_HOURS); Rewrite — на первом
+ретрае, Broaden — на последующих, максимум MAX_RETRIEVAL_LOOPS коррекций.
 """
 
 from __future__ import annotations
@@ -21,8 +24,12 @@ logger = logging.getLogger(__name__)
 
 _REWRITE_SYSTEM = (
     "You convert a user question into a concise search query for a hybrid "
-    "(keyword + semantic) search over project documentation. Keep domain terms "
-    "and identifiers as-is. Output ONLY the query, nothing else."
+    "(keyword + semantic) search over project documentation. CRITICAL: keep all "
+    "technical terms, error codes, variables and identifiers EXACTLY as-is. "
+    "Output ONLY the final query, without quotes or any introductory text.\n\n"
+    "Example:\n"
+    "Input: where is the variable TOKEN_EXPIRY_HOURS configured?\n"
+    "Output: TOKEN_EXPIRY_HOURS configuration location"
 )
 
 _GRADE_SYSTEM = (
@@ -38,9 +45,17 @@ _GRADE_SYSTEM = (
 )
 
 _TOKEN_RE = re.compile(r"[a-z0-9]+")
-# Маркеры того, что запрос латиницей (документированный сценарий: корпус
-# английский, английские вопросы дают самые надёжные ответы).
-_LATIN_RE = re.compile(r"^[a-z0-9\s\-']+$")
+
+
+def _latin_script(text: str) -> bool:
+    """Запрос набран латиницей (документированный сценарий: корпус английский,
+    английские вопросы дают самые надёжные ответы). Пунктуация, регистр и
+    служебные символы не важны; нелатинские запросы затвор не проверяет —
+    кросс-языковое совпадение токенов невозможно.
+    """
+    return all(ord(ch) < 128 for ch in text if ch.isalpha())
+
+
 # Служебные слова, не участвующие в лексической проверке релевантности.
 _STOPWORDS = {
     "the", "and", "for", "with", "that", "this", "from", "what", "who",
@@ -57,8 +72,11 @@ def _content_tokens(text: str) -> set[str]:
 
 _BROADEN_SYSTEM = (
     "You broaden a search query that returned too few relevant documents. "
-    "Add synonyms, related terms and general category words. "
-    "Output ONLY the new query, nothing else."
+    "Add synonyms, related terms and general category words. Keep original "
+    "identifiers intact. Output ONLY the new query, nothing else.\n\n"
+    "Example:\n"
+    "Input: TOKEN_EXPIRY_HOURS missing field\n"
+    "Output: TOKEN_EXPIRY_HOURS token expiration lifetime duration config settings"
 )
 
 _GENERATE_SYSTEM = (
@@ -137,7 +155,10 @@ class CorrectiveRAGGraph:
         except Exception:  # noqa: BLE001 — падение rewrite не должно ломать пайплайн
             logger.exception("Rewrite Query не удался; используем исходный вопрос")
             rewritten = state["question"]
-        return {"rewritten": rewritten or state["question"]}
+        return {
+            "rewritten": rewritten or state["question"],
+            "loop_count": state["loop_count"] + 1,
+        }
 
     def _retrieve(self, state: RAGState) -> dict:
         return {"retrieved": self._retriever.search(state["rewritten"], self._top_k)}
@@ -164,7 +185,7 @@ class CorrectiveRAGGraph:
         Нелатинские запросы не проверяем — кросс-языковое совпадение токенов
         невозможно, затвор ложно отказывал бы на валидных вопросах.
         """
-        if not relevant or not _LATIN_RE.match(query.lower().strip()):
+        if not relevant or not _latin_script(query):
             return False
         qtok = _content_tokens(query)
         if not qtok:
@@ -174,9 +195,7 @@ class CorrectiveRAGGraph:
 
     def _generate(self, state: RAGState) -> dict:
         relevant = state["relevant"]
-        if not relevant or self._lexically_unrelated(
-            state.get("rewritten") or state["question"], relevant
-        ):
+        if not relevant or self._lexically_unrelated(state["question"], relevant):
             return {
                 "answer": "No relevant fragments found in the knowledge base. "
                 "Не найдено релевантных фрагментов в базе знаний. "
@@ -195,7 +214,9 @@ class CorrectiveRAGGraph:
     def _route(self, state: RAGState) -> str:
         enough = len(state["relevant"]) >= self._min_relevant
         exhausted = state["loop_count"] >= self._max_loops
-        return "generate" if (enough or exhausted) else "broaden"
+        if enough or exhausted:
+            return "generate"
+        return "rewrite" if state["loop_count"] == 0 else "broaden"
 
     def _build(self) -> StateGraph:
         builder: StateGraph = StateGraph(RAGState)
@@ -204,14 +225,14 @@ class CorrectiveRAGGraph:
         builder.add_node("grade", self._grade)
         builder.add_node("broaden", self._broaden)
         builder.add_node("generate", self._generate)
-        builder.add_edge(START, "rewrite")
-        builder.add_edge("rewrite", "retrieve")
+        builder.add_edge(START, "retrieve")
         builder.add_edge("retrieve", "grade")
         builder.add_conditional_edges(
             "grade",
             self._route,
-            {"generate": "generate", "broaden": "broaden"},
+            {"generate": "generate", "rewrite": "rewrite", "broaden": "broaden"},
         )
+        builder.add_edge("rewrite", "retrieve")
         builder.add_edge("broaden", "retrieve")
         builder.add_edge("generate", END)
         return builder

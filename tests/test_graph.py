@@ -11,14 +11,14 @@ def build_graph(vector_canned, llm_responses, **kwargs):
     retriever = HybridRetriever(vector, FakeSparseStorage(), rrf_k=60)
     llm = FakeLLM(responses=list(llm_responses))
     graph = CorrectiveRAGGraph(retriever, llm, **kwargs)
-    return graph, llm
+    return graph, llm, vector
 
 
 def test_happy_path_generates_answer_with_sources():
     chunks = [make_chunk("a", "токен живёт 24 часа", "docs/auth.md"), make_chunk("b", "refresh 30 дней", "docs/auth.md")]
-    graph, llm = build_graph(
+    graph, llm, vector = build_graph(
         vector_canned=[[ScoredChunk(chunks[0], 0.1), ScoredChunk(chunks[1], 0.2)]],
-        llm_responses=["токен auth", grade_json([True, True]), "Доступ выдаётся на 24 часа."],
+        llm_responses=[grade_json([True, True]), "Доступ выдаётся на 24 часа."],
     )
     result = graph.run("Какой срок жизни токена?")
 
@@ -26,22 +26,23 @@ def test_happy_path_generates_answer_with_sources():
     assert result.sources == ["docs/auth.md"]
     assert result.chunks_relevant == 2
     assert result.loops_used == 0
-    # вызовы LLM: rewrite, grade, generate
-    assert len(llm.prompts) == 3
+    # первый поиск — по исходному вопросу, без rewrite
+    assert vector.queries == ["Какой срок жизни токена?"]
+    # вызовы LLM: grade, generate (rewrite на happy path не выполняется)
+    assert len(llm.prompts) == 2
 
 
-def test_few_relevant_triggers_broaden_and_retry():
+def test_few_relevant_triggers_rewrite_and_retry():
     irrelevant = make_chunk("x", "совсем не то", "docs/other.md")
     relevant = [make_chunk("a", "токен 24 часа", "docs/auth.md"), make_chunk("b", "refresh 30 дней", "docs/auth.md")]
-    graph, llm = build_graph(
+    graph, llm, vector = build_graph(
         vector_canned=[
             [ScoredChunk(irrelevant, 0.1)],
             [ScoredChunk(relevant[0], 0.1), ScoredChunk(relevant[1], 0.2)],
         ],
         llm_responses=[
-            "узкий запрос",
             grade_json([False]),
-            "аутентификация токены сроки",
+            "узкий запрос",
             grade_json([True, True]),
             "Итоговый ответ.",
         ],
@@ -52,20 +53,21 @@ def test_few_relevant_triggers_broaden_and_retry():
     assert result.answer == "Итоговый ответ."
     assert result.loops_used == 1
     assert result.chunks_relevant == 2
-    # rewrite, grade, broaden, grade, generate
-    assert len(llm.prompts) == 5
+    # 1-й ретрай — rewrite; поиск идёт по переписанному запросу
+    assert vector.queries == ["Сколько живёт токен?", "узкий запрос"]
+    # grade, rewrite, grade, generate
+    assert len(llm.prompts) == 4
 
 
 def test_loop_fuse_caps_retry_cycles():
     stuck = make_chunk("x", "совсем не то", "docs/other.md")
-    graph, llm = build_graph(
-        vector_canned=[[ScoredChunk(stuck, 0.1)]],
+    graph, llm, vector = build_graph(
+        vector_canned=[[ScoredChunk(stuck, 0.1)]] * 3,
         llm_responses=[
+            grade_json([False]),
             "запрос",
             grade_json([False]),
-            "расширение 1",
-            grade_json([False]),
-            "расширение 2",
+            "расширение",
             grade_json([False]),
         ],
         max_loops=2,
@@ -74,14 +76,16 @@ def test_loop_fuse_caps_retry_cycles():
 
     assert result.loops_used == 2
     assert "Не найдено релевантных фрагментов" in result.answer
-    assert len(llm.prompts) == 6  # generate не вызывается без релевантных чанков
+    # 1-й ретрай — rewrite, 2-й — broaden
+    assert vector.queries == ["вопрос без ответа в базе", "запрос", "расширение"]
+    assert len(llm.prompts) == 5  # grade, rewrite, grade, broaden, grade
 
 
 def test_grade_fallback_all_relevant_on_bad_json():
     chunks = [make_chunk("a", "текст про кэш", "docs/cache.md"), make_chunk("b", "ещё про кэш", "docs/cache.md")]
-    graph, _ = build_graph(
+    graph, _, _ = build_graph(
         vector_canned=[[ScoredChunk(chunks[0], 0.1), ScoredChunk(chunks[1], 0.2)]],
-        llm_responses=["кэш", "это не json", "Ответ по кэшу."],
+        llm_responses=["это не json", "Ответ по кэшу."],
     )
     result = graph.run("как работает кэш?")
 
@@ -102,12 +106,11 @@ def test_parse_verdicts_raises_without_json():
 
 def test_refusal_message_is_bilingual():
     stuck = make_chunk("x", "совсем не то", "docs/other.md")
-    graph, llm = build_graph(
-        vector_canned=[[ScoredChunk(stuck, 0.1)]],
+    graph, llm, _ = build_graph(
+        vector_canned=[[ScoredChunk(stuck, 0.1)]] * 2,
         llm_responses=[
-            "запрос",
             grade_json([False]),
-            "расширение",
+            "запрос",
             grade_json([False]),
         ],
         max_loops=1,
@@ -116,19 +119,15 @@ def test_refusal_message_is_bilingual():
 
     assert "No relevant fragments found" in result.answer
     assert "Не найдено релевантных фрагментов" in result.answer
-    # rewrite, grade, broaden, grade — generate не вызывается без чанков
-    assert len(llm.prompts) == 4
+    # grade, rewrite, grade — generate не вызывается без чанков
+    assert len(llm.prompts) == 3
 
 
 def test_lexical_gate_refuses_offtopic_english_question():
     noise = make_chunk("n", "пруст и время в Комбре", "docs/proust.md")
-    graph, llm = build_graph(
-        vector_canned=[
-            [ScoredChunk(noise, 0.1)],
-            [ScoredChunk(noise, 0.1)],
-        ],
+    graph, llm, _ = build_graph(
+        vector_canned=[[ScoredChunk(noise, 0.1)]] * 2,
         llm_responses=[
-            "airspeed unladen swallow",
             grade_json([True]),
             "unladen swallow",
             grade_json([True]),
@@ -138,19 +137,19 @@ def test_lexical_gate_refuses_offtopic_english_question():
     result = graph.run("What is the airspeed of an unladen swallow?")
 
     assert "No relevant fragments found" in result.answer
-    # rewrite, grade, broaden, grade — generate не вызвал LLM
-    assert len(llm.prompts) == 4
+    # затвор сверяет исходный вопрос с чанками, а не переписанный запрос
+    assert len(llm.prompts) == 3  # grade, rewrite, grade — generate не вызвал LLM
 
 
 def test_lexical_gate_passes_on_topic_english_question():
     chunk = make_chunk("a", "Cottard is a physician of the Verdurin circle", "docs/p.md")
-    graph, llm = build_graph(
+    graph, llm, _ = build_graph(
         vector_canned=[[ScoredChunk(chunk, 0.1)]],
-        llm_responses=["Cottard Verdurin", grade_json([True]), "He is a physician."],
+        llm_responses=[grade_json([True]), "He is a physician."],
         min_relevant=1,
     )
     result = graph.run("Who is Professor Cottard?")
 
     assert result.answer == "He is a physician."
     assert result.sources == ["docs/p.md"]
-    assert len(llm.prompts) == 3  # rewrite, grade, generate — без broaden
+    assert len(llm.prompts) == 2  # grade, generate — без rewrite и broaden

@@ -1,0 +1,24 @@
+{
+  "mode": "grade",
+  "golden_version": 3,
+  "rows": [
+    {
+      "id": "refusal-swallow",
+      "category": "refusal",
+      "gold_in_pool_rank": null,
+      "chunks_relevant": 3,
+      "loops": 1,
+      "refusal_ok": false,
+      "gold_preserved": null
+    },
+    {
+      "id": "refusal-kubernetes",
+      "category": "refusal",
+      "gold_in_pool_rank": null,
+      "chunks_relevant": 5,
+      "loops": 0,
+      "refusal_ok": false,
+      "gold_preserved": null
+    }
+  ]
+}
