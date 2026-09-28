@@ -1,0 +1,62 @@
+{
+  "mode": "grade",
+  "golden_version": 3,
+  "rows": [
+    {
+      "id": "proust-cottard-meet",
+      "category": "proust",
+      "gold_in_pool_rank": 1,
+      "chunks_relevant": 3,
+      "loops": 1,
+      "gold_preserved": true
+    },
+    {
+      "id": "proust-cottard-summer",
+      "category": "proust",
+      "gold_in_pool_rank": 3,
+      "chunks_relevant": 2,
+      "loops": 0,
+      "gold_preserved": true
+    },
+    {
+      "id": "proust-vinteuil-neighbours",
+      "category": "proust",
+      "gold_in_pool_rank": 2,
+      "chunks_relevant": 2,
+      "loops": 1,
+      "gold_preserved": true
+    },
+    {
+      "id": "proust-odette",
+      "category": "proust",
+      "gold_in_pool_rank": 1,
+      "chunks_relevant": 2,
+      "loops": 1,
+      "gold_preserved": false
+    },
+    {
+      "id": "proust-swann-motive",
+      "category": "proust",
+      "gold_in_pool_rank": 1,
+      "chunks_relevant": 4,
+      "loops": 1,
+      "gold_preserved": true
+    },
+    {
+      "id": "proust-gilberte",
+      "category": "proust",
+      "gold_in_pool_rank": 1,
+      "chunks_relevant": 1,
+      "loops": 2,
+      "gold_preserved": false
+    },
+    {
+      "id": "proust-vinteuil-sonata",
+      "category": "proust",
+      "gold_in_pool_rank": 3,
+      "chunks_relevant": 3,
+      "loops": 0,
+      "gold_preserved": true
+    }
+  ]
+}

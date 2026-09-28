@@ -187,6 +187,7 @@ VS Code / другие клиенты, поддерживающие streamable H
 | `LLM_MODEL` | `qwen2.5:3b-instruct` | локальная LLM |
 | `OLLAMA_BASE_URL` | `http://localhost:11434` | адрес Ollama |
 | `CHROMA_DIR` | `./data/chroma` | каталог векторного хранилища |
+| `RRF_W_DENSE` / `RRF_W_SPARSE` | `1.0` / `1.0` | Веса ветвей в RRF-слиянии гибридного поиска |
 | `MCP_TRANSPORT` | `stdio` | `stdio` или `http` |
 | `LOG_LEVEL` | `INFO` | уровень логов сервера (`DEBUG` — подробнее) |
 

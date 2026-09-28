@@ -68,7 +68,13 @@ def get_context() -> AppContext:
     indexer = DocumentIndexer(
         vector, sparse, embedder, chunk_size=settings.chunk_size, chunk_overlap=settings.chunk_overlap
     )
-    retriever = HybridRetriever(vector, sparse, rrf_k=settings.rrf_k)
+    retriever = HybridRetriever(
+        vector,
+        sparse,
+        rrf_k=settings.rrf_k,
+        w_dense=settings.rrf_w_dense,
+        w_sparse=settings.rrf_w_sparse,
+    )
     llm = OllamaService(settings)
     graph = CorrectiveRAGGraph(
         retriever,

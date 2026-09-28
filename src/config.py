@@ -41,6 +41,8 @@ class Settings:
     min_relevant_chunks: int = 2
     max_retrieval_loops: int = 2
     rrf_k: int = 60
+    rrf_w_dense: float = 1.0
+    rrf_w_sparse: float = 1.0  # свип весов (n=12): буст sparse >1 топит BM25-мусором top-5, lift даёт tie-break
 
     log_level: str = "INFO"
     mcp_transport: str = "stdio"  # "stdio" | "http"
@@ -74,6 +76,8 @@ def load_settings() -> Settings:
         min_relevant_chunks=_env_int("MIN_RELEVANT_CHUNKS", 2),
         max_retrieval_loops=_env_int("MAX_RETRIEVAL_LOOPS", 2),
         rrf_k=_env_int("RRF_K", 60),
+        rrf_w_dense=_env_float("RRF_W_DENSE", 1.0),
+        rrf_w_sparse=_env_float("RRF_W_SPARSE", 1.0),
         log_level=os.getenv("LOG_LEVEL", "INFO").upper(),
         mcp_transport=os.getenv("MCP_TRANSPORT", "stdio").lower(),
         mcp_host=os.getenv("MCP_HOST", "0.0.0.0"),

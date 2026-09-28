@@ -1,4 +1,4 @@
-"""HybridRetriever: параллельный dense+sparse поиск и слияние по RRF."""
+"""HybridRetriever: параллельный dense+sparse поиск и слияние по взвешенному RRF."""
 
 from __future__ import annotations
 
@@ -10,15 +10,33 @@ from src.domain.models import Chunk, ScoredChunk
 
 logger = logging.getLogger(__name__)
 
+_ABSENT = float("inf")
+
 
 class HybridRetriever:
     """Гибридный поиск: BM25 покрывает точные ключевые слова и токены кода,
-    векторный поиск — смысл запроса; результаты сливаются по рангам (RRF)."""
+    векторный поиск — смысл запроса; результаты сливаются по рангам (RRF).
 
-    def __init__(self, vector: VectorStorage, sparse: SparseStorage, rrf_k: int = 60) -> None:
+    rrf_score = w_dense/(k + r_dense) + w_sparse/(k + r_sparse);
+    отсутствующее слагаемое = 0. Веса компенсируют разницу силы ветвей.
+
+    Тай-брейк при равном балле: выше чанк с лучшим рангом в BM25-ветви,
+    затем с лучшим dense-рангом (отсутствующий ранг считается худшим).
+    """
+
+    def __init__(
+        self,
+        vector: VectorStorage,
+        sparse: SparseStorage,
+        rrf_k: int = 60,
+        w_dense: float = 1.0,
+        w_sparse: float = 1.0,
+    ) -> None:
         self._vector = vector
         self._sparse = sparse
         self._rrf_k = rrf_k
+        self._w_dense = w_dense
+        self._w_sparse = w_sparse
 
     def search(self, query: str, top_k: int) -> list[ScoredChunk]:
         if not query.strip() or top_k <= 0:
@@ -29,19 +47,34 @@ class HybridRetriever:
             dense = dense_future.result()
             sparse = sparse_future.result()
 
-        # rrf_score = 1/(k + r_dense) + 1/(k + r_sparse); отсутствующее слагаемое = 0
-        by_id: dict[str, tuple[Chunk, float]] = {}
+        # id -> (chunk, score, rank_dense, rank_sparse)
+        by_id: dict[str, tuple[Chunk, float, int | None, int | None]] = {}
         for rank, scored in enumerate(dense, start=1):
-            _, score = by_id.get(scored.chunk.id, (scored.chunk, 0.0))
-            by_id[scored.chunk.id] = (scored.chunk, score + 1.0 / (self._rrf_k + rank))
+            _, score, _, r_sparse = by_id.get(scored.chunk.id, (scored.chunk, 0.0, None, None))
+            by_id[scored.chunk.id] = (
+                scored.chunk,
+                score + self._w_dense / (self._rrf_k + rank),
+                rank,
+                r_sparse,
+            )
         for rank, scored in enumerate(sparse, start=1):
-            chunk, score = by_id.get(scored.chunk.id, (scored.chunk, 0.0))
-            by_id[scored.chunk.id] = (chunk, score + 1.0 / (self._rrf_k + rank))
+            chunk, score, r_dense, _ = by_id.get(scored.chunk.id, (scored.chunk, 0.0, None, None))
+            by_id[scored.chunk.id] = (
+                chunk,
+                score + self._w_sparse / (self._rrf_k + rank),
+                r_dense,
+                rank,
+            )
 
-        # Сортировка стабильна: при равенстве баллов dense-выдача идёт раньше
-        fused = [ScoredChunk(chunk=c, score=s) for c, s in by_id.values()]
-        fused.sort(key=lambda s: s.score, reverse=True)
-        return fused[:top_k]
+        fused = sorted(
+            by_id.values(),
+            key=lambda e: (
+                -e[1],
+                e[3] if e[3] is not None else _ABSENT,
+                e[2] if e[2] is not None else _ABSENT,
+            ),
+        )
+        return [ScoredChunk(chunk=c, score=s) for c, s, _, _ in fused[:top_k]]
 
     def _safe_dense(self, query: str, top_k: int) -> list[ScoredChunk]:
         try:
